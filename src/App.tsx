@@ -14,7 +14,6 @@ import {
   SeasonEnded,
   NaughtyForm,
 } from "./screens";
-import SnowAnimation from "./components/SnowAnimation";
 import BackgroundAudio from "./components/BackgroundAudio";
 
 function App() {
@@ -61,7 +60,6 @@ function App() {
           className="absolute inset-0 h-full w-full object-cover"
         />
       )}
-      <SnowAnimation />
       {currentScreen !== "introLoading" && <Header />}
       {renderScreen()}
       {currentScreen !== "introLoading" && <Footer />}
