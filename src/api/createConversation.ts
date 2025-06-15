@@ -10,9 +10,9 @@ export const createConversation = async (
       "x-api-key": token ?? "",
     },
     body: JSON.stringify({
-      // Santa Demo Persona
-      replica_id: "rb17cf590e15",
-      persona_id: "p3bb4745d4f9",
+      // Pokemon Expert Persona
+      replica_id: "r70c81a0519b",
+      persona_id: "p4a3d28e170f",
     }),
   });
 

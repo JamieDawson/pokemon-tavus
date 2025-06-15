@@ -2,7 +2,7 @@ export const SnowLoader: React.FC = () => {
   return (
     <div className="flex flex-col items-center justify-center gap-6">
       <img
-        src="./images/snowflake.svg"
+        src="./images/pokeball_icon.png"
         alt="snowflake"
         className="size-16 animate-spin-slow"
       />

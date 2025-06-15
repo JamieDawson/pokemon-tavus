@@ -50,7 +50,7 @@ function App() {
   return (
     <main className="snow-background flex h-svh flex-col items-center justify-between gap-3 p-5 sm:gap-4 lg:p-8">
       <img
-        src="/images/santaBG.png"
+        src="/images/pokemonBG.jpg"
         alt="main-bg"
         className="absolute inset-0 h-full w-full object-cover"
       />
