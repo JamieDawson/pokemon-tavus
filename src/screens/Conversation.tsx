@@ -45,6 +45,27 @@ const outroPhrases = [
   "I must say goodbye for now—the magic of Christmas calls! Stay on the nice list, and I'll see you soon!",
 ];
 
+// Pokemon fact helper
+const pokemonFacts: Record<string, string> = {
+  pikachu:
+    "Pikachu stores electricity in its cheeks and releases it in lightning-based attacks.",
+  bulbasaur:
+    "Bulbasaur is the only starter that is both a Grass and Poison type.",
+  charizard: "Charizard can melt boulders with its fiery breath.",
+  squirtle:
+    "Squirtle’s shell is not just for protection. The shell’s rounded shape and the grooves on its surface help minimize resistance in water.",
+  mewtwo:
+    "Mewtwo was created by scientists through genetic manipulation. It’s one of the most powerful Pokémon.",
+};
+
+const getPokemonFact = (name: string): string => {
+  const key = name?.toLowerCase();
+  return (
+    pokemonFacts[key] ||
+    `I don't know a fact about ${name}, but it sounds like a cool Pokémon!`
+  );
+};
+
 export const Conversation: React.FC = () => {
   const [conversation, setConversation] = useAtom(conversationAtom);
   const [, setScreenState] = useAtom(screenAtom);
@@ -123,6 +144,52 @@ export const Conversation: React.FC = () => {
     }
   }, [conversation?.conversation_url]);
 
+  // ✅ Listen for messages (tool calls and others)
+  useEffect(() => {
+    const handleAppMessage = (event: any) => {
+      const msg = event?.data;
+
+      console.log("Incoming app-message:", msg); // Log every message
+
+      if (msg?.message_type !== "conversation") return;
+
+      if (msg?.event_type === "conversation.tool_call") {
+        console.log("🛠 Tool call received!");
+        const { tool_name, arguments: args } = msg.properties;
+
+        if (tool_name === "get_pokemon_fact") {
+          const pokemonName = args?.pokemon_name;
+          const fact = getPokemonFact(pokemonName);
+
+          daily?.sendAppMessage({
+            message_type: "conversation",
+            event_type: "conversation.tool_response",
+            conversation_id: conversation?.conversation_id,
+            properties: {
+              tool_name: "get_pokemon_fact",
+              response: fact,
+            },
+          });
+
+          console.log(`Responded with fact for ${pokemonName}: ${fact}`);
+        }
+      } else if (
+        msg?.event_type === "conversation.echo" ||
+        msg?.event_type === "conversation.response"
+      ) {
+        console.log("Regular LLM message received.");
+      } else {
+        console.log("Other conversation event:", msg?.event_type);
+      }
+    };
+    
+
+    daily?.on("app-message", handleAppMessage);
+    return () => {
+      daily?.off("app-message", handleAppMessage);
+    };
+  }, [daily, conversation]);
+
   const toggleVideo = useCallback(() => {
     daily?.setLocalVideo(!isCameraEnabled);
   }, [daily, isCameraEnabled]);
@@ -167,24 +234,14 @@ export const Conversation: React.FC = () => {
           />
         )}
         <div className="absolute bottom-8 right-1/2 z-10 flex translate-x-1/2 justify-center gap-4">
-          <Button
-            size="icon"
-            className=""
-            variant="secondary"
-            onClick={toggleAudio}
-          >
+          <Button size="icon" variant="secondary" onClick={toggleAudio}>
             {!isMicEnabled ? (
               <MicOffIcon className="size-6" />
             ) : (
               <MicIcon className="size-6" />
             )}
           </Button>
-          <Button
-            size="icon"
-            className=""
-            variant="secondary"
-            onClick={toggleVideo}
-          >
+          <Button size="icon" variant="secondary" onClick={toggleVideo}>
             {!isCameraEnabled ? (
               <VideoOffIcon className="size-6" />
             ) : (

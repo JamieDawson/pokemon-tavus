@@ -53,7 +53,7 @@ export const Intro: React.FC = () => {
             disabled={!token}
           >
             <Video className="size-5" />
-            Talk to Santa
+            Talk to a Pokemon Master!
           </AudioButton>
         </div>
       </div>
