@@ -34,36 +34,38 @@ import { naughtyScoreAtom } from "@/store/game";
 import { apiTokenAtom } from "@/store/tokens";
 
 const timeToGoPhrases = [
-  "I'll need to dash off soon—there’s still so much to prepare for Christmas! But let’s make these last moments count.",
-  "The elves are calling me back to the workshop soon, but I've got a little more time for you!",
-  "I'll be heading out soon—the reindeer are getting restless—but I'd love to hear one more thing before I go!",
+  "I'll need to dash off soon—there’s I have to prepare for my next pokemon battle! You can give one last request!",
+  "My Bulbasaur is getting hungry! But I've got a little more time for you!",
+  "I'll be heading out soon—my pokemon are getting restless—but I'd love to hear one more thing before I go!",
 ];
 
 const outroPhrases = [
-  "It's time for me to go now—Christmas magic doesn't make itself! Take care, and I'll see you soon!",
-  "I've got to get back to the North Pole—the workshop needs me! Be good, and Merry Christmas until we meet again!",
-  "I must say goodbye for now—the magic of Christmas calls! Stay on the nice list, and I'll see you soon!",
+  "It's time for me to go now—Gotta feed my pokemon! Take care, and I'll see you soon!",
+  "I've got to get back to Lavender Town—my pokemon needs me! Be good, until we meet again!",
+  "I must say goodbye for now!! Take care of your pokemon and I'll see you soon!",
 ];
 
-// Pokemon fact helper
-const pokemonFacts: Record<string, string> = {
-  pikachu:
-    "Pikachu stores electricity in its cheeks and releases it in lightning-based attacks.",
-  bulbasaur:
-    "Bulbasaur is the only starter that is both a Grass and Poison type.",
-  charizard: "Charizard can melt boulders with its fiery breath.",
-  squirtle:
-    "Squirtle’s shell is not just for protection. The shell’s rounded shape and the grooves on its surface help minimize resistance in water.",
-  mewtwo:
-    "Mewtwo was created by scientists through genetic manipulation. It’s one of the most powerful Pokémon.",
+const fetchPokemonData = async (pokemonName: string) => {
+  try {
+    const response = await fetch(
+      `https://pokeapi.co/api/v2/pokemon/${pokemonName.toLowerCase()}`,
+    );
+    if (!response.ok) throw new Error("Pokémon not found");
+    return await response.json();
+  } catch (error) {
+    console.error("Error fetching Pokémon data:", error);
+    return null;
+  }
 };
 
-const getPokemonFact = (name: string): string => {
-  const key = name?.toLowerCase();
-  return (
-    pokemonFacts[key] ||
-    `I don't know a fact about ${name}, but it sounds like a cool Pokémon!`
-  );
+const buildPokemonFact = async (pokemonName: string): Promise<string> => {
+  const data = await fetchPokemonData(pokemonName);
+  if (!data) {
+    return `I couldn’t fetch info about ${pokemonName}. Try again!`;
+  }
+
+  const abilities = data.abilities?.map((item: any) => item.ability.name);
+  return `${pokemonName} has the following abilities: ${abilities.join(", ")}.`;
 };
 
 export const Conversation: React.FC = () => {
@@ -144,34 +146,49 @@ export const Conversation: React.FC = () => {
     }
   }, [conversation?.conversation_url]);
 
-  // ✅ Listen for messages (tool calls and others)
   useEffect(() => {
     const handleAppMessage = (event: any) => {
       const msg = event?.data;
 
-      console.log("Incoming app-message:", msg); // Log every message
-
       if (msg?.message_type !== "conversation") return;
 
       if (msg?.event_type === "conversation.tool_call") {
-        console.log("🛠 Tool call received!");
-        const { tool_name, arguments: args } = msg.properties;
+        console.log("🛠 Tool call received!", msg);
 
-        if (tool_name === "get_pokemon_fact") {
+        const toolName = msg.properties?.name;
+        const rawArgs = msg.properties?.arguments;
+
+        if (!toolName || !rawArgs) {
+          console.warn("Missing tool name or arguments");
+          return;
+        }
+
+        let args;
+        try {
+          args = JSON.parse(rawArgs);
+        } catch (error) {
+          console.error("Failed to parse tool arguments:", error);
+          return;
+        }
+
+        if (toolName === "get_pokemon_fact") {
           const pokemonName = args?.pokemon_name;
-          const fact = getPokemonFact(pokemonName);
+          console.log("Fetching fact for:", pokemonName);
 
-          daily?.sendAppMessage({
-            message_type: "conversation",
-            event_type: "conversation.tool_response",
-            conversation_id: conversation?.conversation_id,
-            properties: {
-              tool_name: "get_pokemon_fact",
-              response: fact,
-            },
-          });
+          (async () => {
+            const responseText = await buildPokemonFact(pokemonName);
+            console.log("Fact generated:", responseText);
 
-          console.log(`Responded with fact for ${pokemonName}: ${fact}`);
+            daily?.sendAppMessage({
+              message_type: "conversation",
+              event_type: "conversation.tool_response",
+              conversation_id: conversation?.conversation_id,
+              properties: {
+                tool_name: toolName,
+                response: responseText,
+              },
+            });
+          })();
         }
       } else if (
         msg?.event_type === "conversation.echo" ||
@@ -182,7 +199,6 @@ export const Conversation: React.FC = () => {
         console.log("Other conversation event:", msg?.event_type);
       }
     };
-    
 
     daily?.on("app-message", handleAppMessage);
     return () => {
