@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { healthCheckApi } from "@/api";
 import { screenAtom } from "@/store/screens";
 import { useAtom } from "jotai";
-import { SnowLoader } from "@/components/SnowLoader";
+import { PokeballLoader } from "@/components/PokeballLoader";
 
 const screens = {
   error: "outage",
@@ -47,7 +47,7 @@ export const IntroLoading: React.FC = () => {
 
   return (
     <div className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-      <SnowLoader />
+      <PokeballLoader />
     </div>
   );
 };
