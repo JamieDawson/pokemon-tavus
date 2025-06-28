@@ -58,25 +58,79 @@ const fetchPokemonData = async (pokemonName: string) => {
   }
 };
 
-const buildPokemonFact = async (pokemonName: string): Promise<string> => {
-  const data = await fetchPokemonData(pokemonName);
+const getPokemonTypes = async (response: any) => {
+  //Note: pokemon either have 1 or 2 types. There are no 3+ type pokemon
 
-  if (!data || !Array.isArray(data.abilities)) {
+  let val = response.types.map((item) => item.type.name);
+
+  if (val.length === 1) {
+    return "This is is a " + val[0] + " type Pokemon!";
+  } else {
+    return "This pokemon is a " + val[0] + " and " + val[1] + " type Pokemon!";
+  }
+};
+
+
+const getPokemonAbilities = async (response: any) => {
+  const abilities = response.abilities.map((item: any) => item.ability.name);
+  return "This Pokémon has the following abilities: " + abilities.join(", ");
+};
+
+
+const getPokemonWeightAndHeight = async (response: {
+  height: number;
+  weight: number;
+}) => {
+  const totalInches = response.height * 3.937;
+  let feet = Math.floor(totalInches / 12);
+  let inches = Math.round(totalInches % 12);
+
+  if (inches === 12) {
+    feet += 1;
+    inches = 0;
+  }
+
+  const pounds = (response.weight * 0.220462).toFixed(1);
+
+  return (
+    "This pokemon is " +
+    feet +
+    " feet " +
+    inches +
+    " inches tall and weighs " +
+    pounds +
+    " pounds."
+  );
+};
+
+const selectPokemontFact = async (pokemonName: string) => {
+  const data =  await fetchPokemonData(pokemonName);
+
+  if (!data) {
     return `I couldn’t fetch info about ${pokemonName}. Try again!`;
   }
 
-  const abilities = data.abilities
-    .map((item: any) => item?.ability?.name)
-    .filter(
-      (name: string | undefined): name is string => typeof name === "string",
-    );
+  const randomNum = Math.floor(Math.random() * 3);
 
-  if (abilities.length === 0) {
-    return `${pokemonName} doesn't seem to have any listed abilities.`;
+  switch (randomNum) {
+    case 0: {
+      const types = await getPokemonTypes(data);
+      return types;
+    }
+    case 1: {
+      const abilities = await getPokemonAbilities(data);
+      return abilities;
+    }
+    case 2: {
+      const heightAndWeight = await getPokemonWeightAndHeight(data);
+      return heightAndWeight;
+    }
+    default:
+      return "Couldn't get Pokémon info.";
   }
 
-  return `${pokemonName} has the following abilities: ${abilities.join(", ")}.`;
-};
+}
+
 
 export const Conversation: React.FC = () => {
   const [conversation, setConversation] = useAtom(conversationAtom);
@@ -161,7 +215,7 @@ export const Conversation: React.FC = () => {
       pokemonName: string,
       conversationId: string | undefined,
     ) => {
-      const fact = await buildPokemonFact(pokemonName);
+      const fact = await selectPokemontFact(pokemonName);
       console.log("📘 Fact returned in prompt:", fact);
 
       setTimeout(() => {
