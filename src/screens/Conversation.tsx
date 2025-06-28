@@ -155,35 +155,36 @@ export const Conversation: React.FC = () => {
         });
     }
   }, [conversation?.conversation_url]);
-  
+
   useEffect(() => {
     const handlePokemonFact = async (
       pokemonName: string,
       conversationId: string | undefined,
     ) => {
       const fact = await buildPokemonFact(pokemonName);
-
       console.log("📘 Fact returned in prompt:", fact);
 
-      daily?.sendAppMessage({
-        message_type: "conversation",
-        event_type: "conversation.echo",
-        conversation_id: conversationId,
-        properties: {
-          modality: "text",
-          text: fact,
-        },
-      });
+      setTimeout(() => {
+        daily?.sendAppMessage({
+          message_type: "conversation",
+          event_type: "conversation.echo",
+          conversation_id: conversationId,
+          properties: {
+            modality: "text",
+            text: fact,
+          },
+        });
 
-      console.log("📤 FINAL tool_response payload:", {
-        message_type: "conversation",
-        event_type: "conversation.echo",
-        conversation_id: conversationId,
-        properties: {
-          modality: "text",
-          text: fact,
-        },
-      });
+        console.log("📤 FINAL tool_response payload:", {
+          message_type: "conversation",
+          event_type: "conversation.echo",
+          conversation_id: conversationId,
+          properties: {
+            modality: "text",
+            text: fact,
+          },
+        });
+      }, 1500);
     };
 
     const handleAppMessage = (event: any) => {
@@ -233,8 +234,8 @@ export const Conversation: React.FC = () => {
     return () => {
       daily?.off("app-message", handleAppMessage);
     };
-  }, [daily, conversation]);  
-  
+  }, [daily, conversation]);
+
   const toggleVideo = useCallback(() => {
     daily?.setLocalVideo(!isCameraEnabled);
   }, [daily, isCameraEnabled]);
