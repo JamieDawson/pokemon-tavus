@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useRef } from "react";
 import { useAtom } from "jotai";
 import { isMusicMutedAtom, musicVolumeAtom } from "@/store/musicVolume";
-import background from "@/assets/sounds/background.mp3";
+import background from "@/assets/sounds/Theme_Of_Pallet_Town.mp3";
 import { screenAtom } from "@/store/screens";
 
 const BackgroundAudio: React.FC = () => {
