@@ -53,18 +53,28 @@ const fetchPokemonData = async (pokemonName: string) => {
     if (!response.ok) throw new Error("Pokémon not found");
     return await response.json();
   } catch (error) {
-    console.error("Error fetching Pokémon data:", error);
+    console.error("❌ Error fetching Pokémon data:", error);
     return null;
   }
 };
 
 const buildPokemonFact = async (pokemonName: string): Promise<string> => {
   const data = await fetchPokemonData(pokemonName);
-  if (!data) {
+
+  if (!data || !Array.isArray(data.abilities)) {
     return `I couldn’t fetch info about ${pokemonName}. Try again!`;
   }
 
-  const abilities = data.abilities?.map((item: any) => item.ability.name);
+  const abilities = data.abilities
+    .map((item: any) => item?.ability?.name)
+    .filter(
+      (name: string | undefined): name is string => typeof name === "string",
+    );
+
+  if (abilities.length === 0) {
+    return `${pokemonName} doesn't seem to have any listed abilities.`;
+  }
+
   return `${pokemonName} has the following abilities: ${abilities.join(", ")}.`;
 };
 
@@ -146,9 +156,30 @@ export const Conversation: React.FC = () => {
     }
   }, [conversation?.conversation_url]);
 
+  const [lastUserSpeech, setLastUserSpeech] = useState<string | null>(null);
+
+  
   useEffect(() => {
     const handleAppMessage = (event: any) => {
       const msg = event?.data;
+      console.log("📨 what is msg!", msg);
+
+      if (!msg?.properties) return;
+
+      const { speech, role } = msg.properties;
+
+      // ✅ Capture latest user speech
+      if (
+        msg?.message_type === "conversation" &&
+        (msg?.event_type === "conversation.response" ||
+          msg?.event_type === "conversation.utterance") &&
+        role === "user" &&
+        speech
+      ) {
+        console.log("🗣 Captured user speech:", speech);
+        setLastUserSpeech(speech);
+      }
+      
 
       if (msg?.message_type !== "conversation") return;
 
@@ -159,7 +190,7 @@ export const Conversation: React.FC = () => {
         const rawArgs = msg.properties?.arguments;
 
         if (!toolName || !rawArgs) {
-          console.warn("Missing tool name or arguments");
+          console.warn("⚠️ Missing tool name or arguments");
           return;
         }
 
@@ -167,36 +198,55 @@ export const Conversation: React.FC = () => {
         try {
           args = JSON.parse(rawArgs);
         } catch (error) {
-          console.error("Failed to parse tool arguments:", error);
+          console.error("❌ Failed to parse tool arguments:", error);
           return;
         }
 
         if (toolName === "get_pokemon_fact") {
           const pokemonName = args?.pokemon_name;
-          console.log("Fetching fact for:", pokemonName);
+          const userSpeech = lastUserSpeech || "Tell me about a Pokémon";
+
+          console.log("🔍🔍🔍 Fetching fact for:", pokemonName);
 
           (async () => {
-            const responseText = await buildPokemonFact(pokemonName);
-            console.log("Fact generated:", responseText);
+            const fact = await buildPokemonFact(pokemonName);
+
+            console.log("🗣 Speech used in prompt:", userSpeech);
+            console.log("📘 Fact returned in prompt:", fact);
+
 
             daily?.sendAppMessage({
               message_type: "conversation",
-              event_type: "conversation.tool_response",
+              event_type: "conversation.echo",
               conversation_id: conversation?.conversation_id,
               properties: {
-                tool_name: toolName,
-                response: responseText,
+                modality: "text",
+                text: fact,
               },
             });
+            
+            console.log("📤 FINAL tool_response payload:", {
+              message_type: "conversation",
+              event_type: "conversation.echo",
+              conversation_id: conversation?.conversation_id,
+              properties: {
+                modality: "text",
+                text: fact,
+              },
+            });
+            
+            
           })();
         }
+      } else if (msg?.event_type === "conversation.tool_response") {
+        console.log("📦 Tool response acknowledged:", msg);
       } else if (
         msg?.event_type === "conversation.echo" ||
         msg?.event_type === "conversation.response"
       ) {
-        console.log("Regular LLM message received.");
+        console.log("💬 Regular LLM message received.");
       } else {
-        console.log("Other conversation event:", msg?.event_type);
+        console.log("🔔 Other conversation event:", msg?.event_type);
       }
     };
 
@@ -204,8 +254,8 @@ export const Conversation: React.FC = () => {
     return () => {
       daily?.off("app-message", handleAppMessage);
     };
-  }, [daily, conversation]);
-
+  }, [daily, conversation, lastUserSpeech]);
+  
   const toggleVideo = useCallback(() => {
     daily?.setLocalVideo(!isCameraEnabled);
   }, [daily, isCameraEnabled]);

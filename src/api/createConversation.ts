@@ -12,8 +12,8 @@ export const createConversation = async (
     },
     body: JSON.stringify({
       // Pokemon Expert Persona
-      replica_id: "r67d1c9cac37",
-      persona_id: "p6c0994b86e0",
+      replica_id: "r6ca16dbe104",
+      persona_id: "p36169ded4c0",
     }),
   });
 
