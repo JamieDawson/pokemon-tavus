@@ -10,9 +10,9 @@ export const SeasonEnded: React.FC = () => {
     <DialogWrapper>
       <AnimatedTextBlockWrapper>
         <StaticTextBlockWrapper
-          imgSrc="/images/snowman.png"
-          title="Santa is on vacation"
-          description="He'll be back next year to hear your wishes and spread the magic once again. See you soon! 🎄✨"
+          imgSrc="/images/pikachu_sleeping.jpg"
+          title="Our pokemon are on vacation"
+          description="We'll be back soon!"
         />
       </AnimatedTextBlockWrapper>
     </DialogWrapper>

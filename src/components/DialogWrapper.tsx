@@ -15,11 +15,7 @@ export const DialogWrapper = ({ children }: { children: React.ReactNode }) => {
         mobileClassName,
       )}
     >
-      <img
-        src="/images/dialogBlur.svg"
-        alt="santa"
-        className="absolute inset-0 h-full w-full object-cover"
-      />
+
       {children}
     </div>
   );
@@ -49,11 +45,7 @@ export const AnimatedWrapper = ({
         mobileClassName,
       )}
     >
-      <img
-        src="/images/dialogBlur.svg"
-        alt="santa"
-        className="absolute inset-0 h-full w-full object-cover"
-      />
+  
       {children}
     </motion.div>
   );

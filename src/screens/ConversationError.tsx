@@ -14,8 +14,8 @@ export const ConversationError: React.FC<{ onClick: () => void }> = ({
     <DialogWrapper>
       <AnimatedTextBlockWrapper>
         <StaticTextBlockWrapper
-          imgSrc="/images/snowman.png"
-          title="Santa's Sleigh is Super Busy"
+          imgSrc="/images/pikachu_sleeping.jpg"
+          title="Pokemon need their rest"
           titleClassName="sm:max-w-full"
           description="Please try again in a few minutes or click the button below to try again."
         >
