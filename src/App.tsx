@@ -9,10 +9,8 @@ import {
   Intro,
   Instructions,
   Conversation,
-  NiceForm,
   FinalScreen,
   SeasonEnded,
-  NaughtyForm,
 } from "./screens";
 import BackgroundAudio from "./components/BackgroundAudio";
 
@@ -33,10 +31,6 @@ function App() {
         return <Instructions />;
       case "conversation":
         return <Conversation />;
-      case "niceForm":
-        return <NiceForm />;
-      case "naughtyForm":
-        return <NaughtyForm />;
       case "finalScreen":
         return <FinalScreen />;
       case "seasonEnded":

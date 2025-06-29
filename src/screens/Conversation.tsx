@@ -29,8 +29,6 @@ import {
 } from "@/utils";
 import { Timer } from "@/components/Timer";
 import { TIME_LIMIT } from "@/config";
-import { niceScoreAtom } from "@/store/game";
-import { naughtyScoreAtom } from "@/store/game";
 import { apiTokenAtom } from "@/store/tokens";
 
 const timeToGoPhrases = [
@@ -61,7 +59,9 @@ const fetchPokemonData = async (pokemonName: string) => {
 const getPokemonTypes = async (response: any) => {
   //Note: pokemon either have 1 or 2 types. There are no 3+ type pokemon
 
-  let val = response.types.map((item) => item.type.name);
+  let val = response.types.map(
+    (item: { type: { name: string } }) => item.type.name,
+  );
 
   if (val.length === 1) {
     return "This is is a " + val[0] + " type Pokemon!";
@@ -135,8 +135,6 @@ const selectPokemontFact = async (pokemonName: string) => {
 export const Conversation: React.FC = () => {
   const [conversation, setConversation] = useAtom(conversationAtom);
   const [, setScreenState] = useAtom(screenAtom);
-  const [naughtyScore] = useAtom(naughtyScoreAtom);
-  const [niceScore] = useAtom(niceScoreAtom);
   const token = useAtomValue(apiTokenAtom);
 
   const daily = useDaily();
@@ -301,19 +299,17 @@ export const Conversation: React.FC = () => {
   const leaveConversation = useCallback(() => {
     daily?.leave();
     daily?.destroy();
+
     if (conversation?.conversation_id && token) {
       endConversation(token, conversation.conversation_id);
     }
+
     setConversation(null);
     clearSessionTime();
 
-    const naughtyScorePositive = Math.abs(naughtyScore);
-    if (naughtyScorePositive > niceScore) {
-      setScreenState({ currentScreen: "naughtyForm" });
-    } else {
-      setScreenState({ currentScreen: "niceForm" });
-    }
+    setScreenState({ currentScreen: "finalScreen" });
   }, [daily, token]);
+  
 
   return (
     <DialogWrapper>

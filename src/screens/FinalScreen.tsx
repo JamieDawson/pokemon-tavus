@@ -10,9 +10,10 @@ export const FinalScreen: React.FC = () => {
     <DialogWrapper>
       <AnimatedTextBlockWrapper>
         <StaticTextBlockWrapper
-          imgSrc="/images/email.png"
-          title="Santa is packing up your transcript and wishlist"
-          description="It'll arrive in your inbox shortly!"
+          imgSrc="/images/pikachu_ears_wiggle.gif"
+          title="Thank you for using the Tavus Pokemon app"
+          titleClassName="text-2xl sm:text-3xl lg:text-4xl font-semibold text-primary"
+          description="We hope it helped you understand how to call an API with a tool_call in Tavus."
         />
       </AnimatedTextBlockWrapper>
     </DialogWrapper>

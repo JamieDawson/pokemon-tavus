@@ -111,7 +111,7 @@ export const StaticTextBlockWrapper = ({
       />
       <h2
         className={cn(
-          "mb-4 bg-text-primary bg-clip-text pt-1 text-center font-santa text-4.5xl text-transparent sm:max-w-[650px] sm:text-6.5xl lg:text-7xl",
+          "mb-4 bg-text-primary bg-clip-text pt-1 text-center text-4.5xl text-transparent sm:max-w-[650px] sm:text-6.5xl lg:text-7xl",
           titleClassName,
         )}
       >

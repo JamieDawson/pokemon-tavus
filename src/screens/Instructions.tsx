@@ -123,9 +123,7 @@ export const Instructions: React.FC = () => {
           Santa's Ready for Anything
         </h1>
         <p className="max-w-[650px] text-center  text-base sm:text-lg">
-          See if Santa can keep up with the holiday chaos—share your wishlist,
-          ask crazy questions, test his patience, and find out if you’ve been
-          naughty or nice!
+          Request facts about a pokemon by requesting a fact by a Pokemons name!
         </p>
         {/* TODO: add tooltip to provide access to mic */}
         <Button
@@ -133,12 +131,12 @@ export const Instructions: React.FC = () => {
           className="relative my-8 sm:my-10"
           disabled={isLoading}
         >
-          Start Conversation with Santa
+          Start Conversation with Your Pokemon expert
           {getUserMediaError && (
             <div className="absolute  -top-1 left-0 right-0 flex items-center gap-1 text-wrap rounded-lg border bg-red-500 p-2 text-white backdrop-blur-sm">
               <AlertTriangle className="text-red size-4" />
               <p>
-                To chat with Santa, please allow microphone access. Check your
+                To chat with your Pokemon expert, please allow microphone access. Check your
                 browser settings.
               </p>
             </div>
