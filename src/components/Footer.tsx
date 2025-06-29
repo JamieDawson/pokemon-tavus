@@ -4,9 +4,9 @@ export const Footer = () => {
   return (
     <footer className="flex w-full items-center justify-between gap-4">
       <a
-        href="https://github.com/Tavus-Engineering/tavus-examples"
+        href="https://github.com/JamieDawson/pokemon-tavus"
         target="_blank"
-        className="hover:shadow-footer-btn relative flex items-center justify-center gap-2 rounded-3xl bg-white px-2 py-3 text-sm font-medium text-black transition-all duration-200 hover:text-primary hover:underline sm:p-4"
+        className="relative flex items-center justify-center gap-2 rounded-3xl bg-white px-2 py-3 text-sm font-medium text-black transition-all duration-200 hover:text-primary hover:underline hover:shadow-footer-btn sm:p-4"
       >
         <GitFork className="size-4" /> Fork the demo
       </a>

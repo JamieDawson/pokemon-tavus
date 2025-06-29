@@ -10,9 +10,9 @@ export const OutOfMinutes: React.FC = () => {
     <DialogWrapper>
       <AnimatedTextBlockWrapper>
         <StaticTextBlockWrapper
-          imgSrc="/images/clock.png"
-          title="You've already chatted with Santa today"
-          description="Come back tomorrow to talk to him again. He'll be waiting!"
+          imgSrc="/images/pikachu_clock.jpg"
+          title="You've already chatted with your Pokemon Master today"
+          description="Come back tomorrow to talk to them again. They'll be waiting!"
         />
       </AnimatedTextBlockWrapper>
     </DialogWrapper>

@@ -10,10 +10,10 @@ export const Outage: React.FC = () => {
     <DialogWrapper>
       <AnimatedTextBlockWrapper>
         <StaticTextBlockWrapper
-          imgSrc="/images/gift.png"
-          title="Santa's Busy Preparing Gifts"
+          imgSrc="/images/pikachu_sleeping.jpg"
+          title="We're busy hunting for Pokémon!"
           titleClassName="sm:max-w-full"
-          description="Santa's workshop is a bit overwhelmed. Hang tight — we'll fix this soon and bring back the magic!"
+          description="Our Pokemon office is a bit overwhelmed. Hang tight — we'll fix this soon!"
         />
       </AnimatedTextBlockWrapper>
     </DialogWrapper>

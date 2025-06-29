@@ -119,11 +119,12 @@ export const Instructions: React.FC = () => {
   return (
     <DialogWrapper>
       <AnimatedTextBlockWrapper>
-        <h1 className="mb-6 bg-text-primary bg-clip-text pt-1 text-center font-santa text-4.5xl text-transparent sm:text-6.5xl lg:text-7xl">
-          Santa's Ready for Anything
+        <h1 className="mb-6 bg-text-primary bg-clip-text pt-1 text-center text-3xl text-transparent sm:text-5xl lg:text-6xl">
+          Speak with a virtual Pokemon Master!
         </h1>
+
         <p className="max-w-[650px] text-center  text-base sm:text-lg">
-          Request facts about a pokemon by requesting a fact by a Pokemons name!
+          Example question: "Give me facts about Pikachu"!
         </p>
         {/* TODO: add tooltip to provide access to mic */}
         <Button
@@ -136,8 +137,8 @@ export const Instructions: React.FC = () => {
             <div className="absolute  -top-1 left-0 right-0 flex items-center gap-1 text-wrap rounded-lg border bg-red-500 p-2 text-white backdrop-blur-sm">
               <AlertTriangle className="text-red size-4" />
               <p>
-                To chat with your Pokemon expert, please allow microphone access. Check your
-                browser settings.
+                To chat with your Pokemon expert, please allow microphone
+                access. Check your browser settings.
               </p>
             </div>
           )}
