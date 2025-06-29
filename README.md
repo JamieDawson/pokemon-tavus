@@ -1,6 +1,6 @@
 # 🎮 Tavus + PokéAPI Tool Call Demo
 
-This project demonstrates how to integrate a `tool_call` in a Tavus-powered video chat application using the [Daily.co](https://www.daily.co/) SDK and a third-party API (PokéAPI) to fetch dynamic Pokémon data in real time.
+This project demonstrates how to call an API using a `tool_call` in Tavus. It uses the [Daily.co](https://www.daily.co/) SDK and a third-party API ([Pokemon API](https://pokeapi.co/)) to fetch dynamic Pokémon data in real time.
 
 ---
 
@@ -49,6 +49,14 @@ A random fact is selected and then echoed back to the user through the `conversa
 3. **Send Back Response**
    - The selected fact is sent back using `conversation.echo`.
 
+
+### **The Pokemon Expert Demo stack includes:**
+- React
+- TypeScript
+- Vite
+- Tailwind CSS
+- Framer Motion
+
 ---
 
 ##  Example Tool Call
@@ -76,6 +84,31 @@ A random fact is selected and then echoed back to the user through the `conversa
   }
 }
 ```
+
+
+## 🧬 Customize the Persona
+
+You can easily update the persona that powers your Tavus conversation.
+
+Open the `createConversation.ts` file and update the `persona_id` and `replica_id` fields to match your custom setup.
+
+#### 🛠️ Example Configuration:
+
+```ts
+body: JSON.stringify({
+  // 🧠 Replace with your custom Persona and Replica IDs
+  persona_id: "p1234567", // e.g., Pokémon Trainer Persona ID from Tavus
+  replica_id: "r89abcd123", // Linked voice replica for the persona
+
+  conversation_name: "A Chat with Your Pokémon Guide", // Optional: Name your session
+  conversational_context: "You're speaking to a seasoned Pokémon Trainer who loves sharing fun facts and lore.", // Helps set tone and context
+  custom_greeting: "Welcome, Trainer! Ready to explore the world of Pokémon?", // First thing users will hear
+  properties: {
+    language: "english", 
+  },
+});
+```
+
 
 ## Steps needed to apply a the get_pokemon_fact `tool_call` to your Persona.
 
@@ -124,3 +157,4 @@ You can confirm in Postman if your Persona is updated by making a `GET` request 
 - [Tavus Platform](https://platform.tavus.io/)  
 - [Creating a Persona](https://docs.tavus.io/sections/conversational-video-interface/creating-a-persona)
 - [Daily React Reference](https://docs.daily.co/reference/daily-react)
+
