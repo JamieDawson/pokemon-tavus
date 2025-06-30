@@ -6,6 +6,8 @@ This project demonstrates how to call an API using a `tool_call` in Tavus. It us
 
 Start by forking the ready-to-use **Pokemon Demo** and explore Tavus CVI's real-time video interactions. Whether you need the classic Persona or a customized version, the demo provides all the building blocks to get started.  
 
+![Tavus App Screenshot](./assets/TavusScreenshot.png)
+
 ## 🍴 **Forking & Running the Demo**  
 
 1. **Install dependencies:**
